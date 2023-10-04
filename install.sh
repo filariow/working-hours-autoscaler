@@ -30,8 +30,12 @@ rm -rf ./tmp/config
 
 cp -r ./config ./tmp/config
 
-( cd tmp/config && \
-    kustomize edit add configmap kube-downscaler --from-literal=DEFAULT_UPTIME="$UPTIME_WEEK $TZ" && \
-    kustomize edit set namespace dev-autoscaler )
+( cd tmp/config/dev-autoscaler && \
+    kustomize edit set namespace dev-autoscaler && \
+    kustomize edit add configmap kube-downscaler --from-literal=DEFAULT_UPTIME="$UPTIME_WEEK $TZ" )
 
-kustomize build ./tmp/config | kubectl apply -f -
+MACHINE_SET=$(kubectl get machinesets.machine.openshift.io | awk '$3==1 {print $1}')
+
+kustomize build ./tmp/config | \
+    sed 's/MACHINE_SET_NAME/'"$MACHINE_SET"'/g' | \
+    kubectl apply -f -
