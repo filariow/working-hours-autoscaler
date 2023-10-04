@@ -25,7 +25,8 @@ spec:
           # - --dry-run
           # run every minute
           - --interval=60
-          - --exclude-namespaces=openshift-.*
+          - --exclude-namespaces=openshift(?!-monitoring|-marketplace|-ingress-canary|-insights|-console|-cluster-samples|-image-registry|-operator-lifecycle\b)\b[-\w]*|kube-.*|dev-autoscaler
+          - --exclude-deployments=kube-downscaler,prometheus-adapter,kube-state-metrics
         envFrom:
           - configMapRef:
               name: kube-downscaler

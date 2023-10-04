@@ -21,7 +21,7 @@ check_command()
 check_commands git kubectl kustomize
 
 TZ=${TZ:-$(ls -l /etc/localtime | cut -d'/' -f7,8)}
-UPTIME_WEEK=${UPTIME_WEEK:-"Mon-Fri 08:00-19:00"}
+UPTIME_WEEK=${UPTIME_WEEK:-"Mon-Fri 10:00-20:00"}
 
 kubectl get namespace dev-autoscaler &> /dev/null || kubectl create namespace dev-autoscaler
 
