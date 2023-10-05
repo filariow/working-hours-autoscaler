@@ -21,7 +21,7 @@ check_command()
 check_commands git kubectl kustomize
 
 TZ=${TZ:-$(ls -l /etc/localtime | cut -d'/' -f7,8)}
-UPTIME_WEEK=${UPTIME_WEEK:-"Mon-Fri 10:00-20:00"}
+UPTIME_WEEK=${UPTIME_WEEK:-"Mon-Fri 15:00-20:00"}
 
 kubectl get namespace dev-autoscaler &> /dev/null || kubectl create namespace dev-autoscaler
 
@@ -34,7 +34,7 @@ cp -r ./config ./tmp/config
     kustomize edit set namespace dev-autoscaler && \
     kustomize edit add configmap kube-downscaler --from-literal=DEFAULT_UPTIME="$UPTIME_WEEK $TZ" )
 
-MACHINE_SET=$(kubectl get machinesets.machine.openshift.io | awk '$3==1 {print $1}')
+MACHINE_SET=$(kubectl get machinesets.machine.openshift.io -n openshift-machine-api | awk '$3==1 {print $1}')
 
 kustomize build ./tmp/config | \
     sed 's/MACHINE_SET_NAME/'"$MACHINE_SET"'/g' | \
